@@ -126,3 +126,5 @@ b <- 1                          # Upper limit of integration
 #Compute the integrations  
 results <- monteCarloIntegrationcontrol(Ix, fX, a, b)  
 print(results)  
+start1 <- proc.time()  
+runtime1 <- proc.time()-start1  
