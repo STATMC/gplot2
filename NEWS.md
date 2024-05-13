@@ -31,7 +31,7 @@ xx <- 1.95
 for (i in 1:m) {  
   mc1[i] <- MC.Phi(xx, R = 1000, antithetic = FALSE)  
   mc2[i] <- MC.Phi(xx, R = 1000)  
-}
+}  
 print(sd(mc1))  
 print(sd(mc2))  
 print((var(mc1)-var(mc2))/var(mc1))  
@@ -58,7 +58,7 @@ monteCarloIntegration <- function(a, b, n, antithetic = TRUE) {
   } else {  
     u <- runif(n, min = a, max = b)  
     estimates <- Bx(u)  
-  }
+  }  
   # Calculate the Monte Carlo estimate of the integral  
   integral_estimate <- (b - a) * mean(estimates)  
   # Calculate the variance of the estimates  
@@ -66,7 +66,7 @@ monteCarloIntegration <- function(a, b, n, antithetic = TRUE) {
   
   # Return the estimate and its variance  
   list(integral = integral_estimate, variance = variance_estimate)  
-}
+}  
 
 compareMethods <- function(a, b, n) {  
   results_antithetic <- monteCarloIntegration(a, b, n, antithetic = TRUE)  
@@ -74,7 +74,7 @@ compareMethods <- function(a, b, n) {
   
   list(antithetic = results_antithetic,  
        standard = results_standard)  
-}
+}  
 
 # Example usage:  
 results_comparison <- compareMethods(0, 0.3, 10000)  
