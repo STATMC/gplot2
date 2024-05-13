@@ -35,7 +35,7 @@ for (i in 1:m) {
 print(sd(mc1))  
 print(sd(mc2))  
 print((var(mc1)-var(mc2))/var(mc1))  
-# the antithetic variance reduced to 99.5% at x = 1.95  
+#the antithetic variance reduced to 99.5% at x = 1.95  
 
 #for all the functions  
 
@@ -59,12 +59,12 @@ monteCarloIntegration <- function(a, b, n, antithetic = TRUE) {
     u <- runif(n, min = a, max = b)  
     estimates <- Bx(u)  
   }  
-  # Calculate the Monte Carlo estimate of the integral  
+  #Calculate the Monte Carlo estimate of the integral  
   integral_estimate <- (b - a) * mean(estimates)  
-  # Calculate the variance of the estimates  
+  #Calculate the variance of the estimates  
   variance_estimate <- (b - a)^2 * var(estimates) / n  
   
-  # Return the estimate and its variance  
+  #Return the estimate and its variance  
   list(integral = integral_estimate, variance = variance_estimate)  
 }  
 
@@ -76,18 +76,18 @@ compareMethods <- function(a, b, n) {
        standard = results_standard)  
 }  
 
-# Example usage:  
+#Example usage:  
 results_comparison <- compareMethods(0, 0.3, 10000)  
 print(results_comparison)  
 
 
 
-### Control Variates  
+###Control Variates  
 
-# c = -(cov(g(x),f(x)))/var(f(x))  
+#c = -(cov(g(x),f(x)))/var(f(x))  
 
-# int 1 to 0 | exp(-x)/(1+x**2) dx  is g(x)  
-# f(x) = e**(-0.5)/(1+x**2)  
+#int 1 to 0 | exp(-x)/(1+x**2) dx  is g(x)  
+#f(x) = e**(-0.5)/(1+x**2)  
 
 fx <- function(u){  
   exp(-0.5)/(1+u**2)  
