@@ -60,9 +60,9 @@ monteCarloIntegration <- function(a, b, n, antithetic = TRUE) {
     estimates <- Bx(u)  
   }  
   #Calculate the Monte Carlo estimate of the integral  
-  integral_estimate <- (b - a) * mean(estimates)  
+  integral_estimate <- round((b - a) * mean(estimates),5)  
   #Calculate the variance of the estimates  
-  variance_estimate <- (b - a)^2 * var(estimates) / n  
+  variance_estimate <- round(((b - a)^2 * var(estimates)),5)  
   
   #Return the estimate and its variance  
   list(integral = integral_estimate, variance = variance_estimate)  
