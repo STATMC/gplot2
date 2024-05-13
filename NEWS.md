@@ -81,8 +81,8 @@ results_comparison <- compareMethods(0, 0.3, 10000)
 print(results_comparison)  
 
 
-
-###Control Variates  
+############  
+###Control Variates####################  
 
 monteCarloIntegrationcontrol <- function(Ix, fX, a, b, n = 100000) {  
   #Generate uniform random numbers between a and b  
@@ -128,3 +128,27 @@ results <- monteCarloIntegrationcontrol(Ix, fX, a, b)
 print(results)  
 start1 <- proc.time()  
 runtime1 <- proc.time()-start1  
+
+###################  
+compareAllMethods <- function(a, b, n) {  
+  #Antithetic Variate Method  
+  results_antithetic <- monteCarloIntegration(a, b, n, antithetic = TRUE)  
+  
+  #Classical Method (non-antithetic)  
+  results_classical <- monteCarloIntegration(a, b, n, antithetic = FALSE)  
+  
+  #Control Variates Method  
+  results_control <- monteCarloIntegrationcontrol(Ix, fX, a, b, n)  
+  
+  #Organize the results into a list for easy comparison  
+  list(  
+    Classical = results_classical,  
+    Antithetic = results_antithetic,  
+    Control_Variate = results_control  
+  )  
+}  
+
+#Example usage  
+#Compare methods between limits 0 and 1 with 10,000 samples  
+comparison_results <- compareAllMethods(0, 1, 10000)  
+print(comparison_results)  
