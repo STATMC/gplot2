@@ -84,33 +84,45 @@ print(results_comparison)
 
 ###Control Variates  
 
-#c = -(cov(g(x),f(x)))/var(f(x))  
-
-#int 1 to 0 | exp(-x)/(1+x**2) dx  is g(x)  
-#f(x) = e**(-0.5)/(1+x**2)  
-
-fx <- function(u){  
-  exp(-0.5)/(1+u**2)  
+monteCarloIntegrationcontrol <- function(Ix, fX, a, b, n = 100000) {  
+  #Generate uniform random numbers between a and b  
+  x <- runif(n, a, b)  
+  
+  #Evaluate the integrand and control function at these points  
+  gX_values <- sapply(x, Ix)  
+  fX_values <- sapply(x, fX)  
+  
+  #Classical Monte Carlo estimation  
+  classical_estimate <- mean(gX_values) * (b - a)  
+  classical_variance <- var(gX_values) * (b - a)^2  
+  
+  #Compute c* for control variates  
+  c_star <- -cov(gX_values, fX_values) / var(fX_values)  
+  expected_fX <- integrate(fX, lower = a, upper = b, subdivisions = 1000)$value / (b - a)  
+  
+  #Control Variate estimation  
+  control_estimate <- mean(gX_values + c_star * (fX_values - expected_fX)) * (b - a)  
+  control_variance <- var(gX_values + c_star * (fX_values - expected_fX)) * (b - a)^2  
+  
+  #Variance reduction percentage  
+  variance_reduction <- 100 * (1 - control_variance / classical_variance)  
+  
+  #Results  
+  list(  
+    Classical_Estimate = classical_estimate,  
+    Classical_Variance = classical_variance,  
+    Control_Estimate = control_estimate, 
+    Control_Variance = control_variance,  
+    Variance_Reduction_Percent = variance_reduction  
+  )  
 }  
 
-gx <- function(u){  
-  exp(-u)/(1+u**2)  
-}  
+#Example usage  
+Ix <- function(x) 1 / (1 + x)   # Your integrand function  
+fX <- function(x) 1 + x         # Control function, correlated with the integrand  
+a <- 0                          # Lower limit of integration  
+b <- 1                          # Upper limit of integration  
 
-u <- runif(1000)  
-B <- fx(u)  
-A <- gx(u)  
-
-#we want bigger than 0.90  
-cor(A,B)  
-
-a <- -cov(A,B)/var(B)  
-
-T1 <- gx(u)  
-
-T2 <- T1 + a* (fx(u)-exp(-0.5)*pi/4)  
-c(mean(T1), (mean(T2)))  
-
-c(var(T1), var(T2))  
-
-(var(T1) - var(T2)) / var(T1)  
+#Compute the integrations  
+results <- monteCarloIntegrationcontrol(Ix, fX, a, b)  
+print(results)  
