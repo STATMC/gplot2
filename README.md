@@ -44,3 +44,79 @@
 #     resultDf["date"] = df.date[i]
 #     resultDf = resultDf.groupby(["ticker"]).mean()
 #     return resultDf
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################
+
+
+
+
+
+
+
+
+
+
+
+
+import pandas as pd
+import numpy as np
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+# Veri çerçevenizin yüklenmesi (varsayım)
+newsCollection = pd.read_csv('your_dataframe.csv')
+
+# Duplicate haber başlıklarını sil
+newsCollection["date"] = pd.to_datetime(newsCollection["date"])
+newsCollection = newsCollection.drop_duplicates(subset=["headline", "date", "source"])
+
+# Tarih işlemleri
+newsCollection["date"] = newsCollection["date"].apply(lambda x: x.replace(hour=0, minute=0, second=0, microsecond=0))
+
+# Son 1000 kaydı al
+newsCollection = newsCollection.iloc[-1000:]
+
+# Tokenizer ve model yükleme
+tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+
+# Duygu analizi fonksiyonu
+def historicalSentiment(df):
+    tempTickers = []
+    tempPosList = []
+    tempNegList = []
+    tempNeuList = []
+    for index, row in df.iterrows():
+        sentenceList = split_into_sentences(row['alltext'])  # Cümlelere ayırma fonksiyonu gerekebilir
+        for sentence in sentenceList:
+            for ticker in usTickers:  # usTickers listesi tanımlanmalı
+                if ticker in sentence:
+                    sentiment = calculateSentiment(sentence)  # Sentiment hesaplama fonksiyonu gerekebilir
+                    tempTickers.append(ticker)
+                    tempPosList.append(sentiment[0])
+                    tempNegList.append(sentiment[1])
+                    tempNeuList.append(sentiment[2])
+    resultDf = pd.DataFrame(list(zip(tempTickers, tempPosList, tempNegList, tempNeuList)), columns=["ticker", "positive", "negative", "neutral"])
+    resultDf["date"] = df.date.iloc[-1]  # Son tarihi kullan
+    resultDf = resultDf.groupby(["ticker"]).mean().reset_index()
+    return resultDf
+
+# Duygu analizi uygulama
+sentiment_results = historicalSentiment(newsCollection)
+print(sentiment_results)
+
+
+
+
+
