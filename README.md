@@ -209,7 +209,61 @@ for date in a.date.drop_duplicates():
     df_list.append(resultDf)
 
 
+#####################################################################################
 
+
+# Duygu analizi için yardımcı fonksiyonlar
+def calculateSentiment(sentence):
+    # Modelinizi ve tokenizer'ınızı kullanarak duygu analizi yapan fonksiyon
+    inputs = tokenizer(sentence, return_tensors="pt", truncation=True, padding=True)
+    outputs = model(**inputs)
+    probs = outputs.logits.softmax(dim=-1).detach().numpy()[0]
+    return probs  # [pozitif, negatif, nötr] varsayımıyla
+
+def split_into_sentences(text):
+    # Metni cümlelere ayıran fonksiyon
+    import nltk
+    nltk.download('punkt')
+    return nltk.tokenize.sent_tokenize(text)
+
+def historicalSentiment(newsCollection, usTickers):
+    tempTickers = []
+    tempPosList = []
+    tempNegList = []
+    tempNeuList = []
+    dates = []
+    
+    for i, row in newsCollection.iterrows():
+        sentenceList = split_into_sentences(row['alltext'])
+        for sentence in sentenceList:
+            for ticker in usTickers:
+                if ticker in sentence:
+                    sentiment = calculateSentiment(sentence)
+                    tempTickers.append(ticker)
+                    tempPosList.append(sentiment[0])
+                    tempNegList.append(sentiment[1])
+                    tempNeuList.append(sentiment[2])
+                    dates.append(row['date'])
+    
+    resultDf = pd.DataFrame({
+        "date": dates,
+        "ticker": tempTickers,
+        "positive": np.array(tempPosList)*100,
+        "negative": np.array(tempNegList)*100,
+        "neutral": np.array(tempNeuList)*100
+    })
+    return resultDf
+
+# Model ve tokenizer yükleme
+tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+
+# US tickers listesi (örnek, gerçek listeyi buraya ekleyin)
+usTickers = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA']
+
+# Haber koleksiyonu DataFrame (newsCollection) üzerinde duygu analizi yapın
+final_df = historicalSentiment(newsCollection, usTickers)
+print(final_df)
 
 
 
