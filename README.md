@@ -118,5 +118,34 @@ print(sentiment_results)
 
 
 
+########################################
+
+import pandas as pd
+
+# Veri çerçevenizin yüklenmesi (varsayım)
+newsCollection = pd.read_csv('your_dataframe.csv')
+
+# Farklı kaynaklara göre tarih formatlama
+def custom_date_parser(date_str, source):
+    if source == 'first':
+        # Format: 'Jul 9, 2024 at 4:51AM'
+        return pd.to_datetime(date_str, format='%b %d, %Y at %I:%M%p', errors='coerce')
+    elif source == 'second':
+        # Format: 'Tue, Jul 9, 2024, 4:51AM'
+        return pd.to_datetime(date_str, format='%a, %b %d, %Y, %I:%M%p', errors='coerce')
+    elif source == 'third':
+        # Format: 'July 9, 2024 4:51AM'
+        return pd.to_datetime(date_str, format='%B %d, %Y %I:%M%p', errors='coerce')
+    else:
+        return pd.NaT
+
+# Tarih sütununu özel parser ile dönüştürme
+newsCollection['parsed_date'] = newsCollection.apply(lambda x: custom_date_parser(x['date'], x['source']), axis=1)
+
+# Dönüşüm sonrası kontrol
+print(newsCollection[['date', 'source', 'parsed_date']].head())
+
+# Hatalı dönüşümleri kontrol et
+print("Entries with NaT in 'parsed_date':", newsCollection['parsed_date'].isna().sum())
 
 
