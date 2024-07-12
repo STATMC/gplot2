@@ -476,4 +476,52 @@ ConnectionError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port
 
 
 
+-------------*-*-*-*-*-*-*-*-**-*-
+
+
+
+
+
+","url":"https:\u002F\u002Fwww.cnbc.com\u002F2024\u002F07\u002F11\u002Fmicrosoft-giving-up-openai-board-observer-seat-doesnt-settle-concerns.html"},{"__typename":"cnbcnewsstory","title":"Jim Cramer on Delta: There's a difference between the stock and the company","url":"https:\u002F\u002Fwww.cnbc.com\u002F2024\u002F07\u002F11\u002Fjim-cramer-on-delta-stock.html"},{"__typename":"cnbcnewsstory","title":"Get access to presale and VIP tickets for concerts, sports games and exclusive events with these credit cards","url":"https:\u002F\u002Fwww.cnbc.com\u002Fselect\u002Fbest-credit-cards-events-experiences\u002F"},{"__typename":"cnbcnewsstory","title":"Jim Cramer explains how to trade Thursday's tech sell-off","url":"https:\u002F\u002Fwww.cnbc.com\u002F2024\u002F07\u002F11\u002Fjim-cramer-explains-how-to-trade-thursdays-tech-sell-off.html"},{"__typename":"cnbcnewsstory","title":"Wells Fargo Autograph Journey Card review — outstanding value for a $95 annual fee travel card","url":"https:\u002F\u002Fwww.cnbc.com\u002Fselect\u002Fwells-fargo-autograph-journey-card-review\u002F"},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
