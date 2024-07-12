@@ -545,6 +545,40 @@ print(links_element)
 
 
 
+#################33
+
+
+
+import requests
+from bs4 import BeautifulSoup
+from lxml import etree
+import pandas as pd
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+}
+
+URL = "https://www.cnbc.com/site-map/articles/yesterday/"
+
+response = requests.get(URL, headers=headers)
+soup = BeautifulSoup(response.text, "html.parser")
+
+dom = etree.HTML(str(soup))
+
+# Assuming articles are within 'a' tags with specific class names, which you need to verify
+links_elements = dom.xpath('//div[contains(@class, "SiteMapArticleList-articleData")]//a[@href]')
+
+new_rows_df = pd.DataFrame(columns=["headline", "alltext", "date", "source", "url"])
+
+for element in links_elements:
+    url = element.get('href')
+    title = element.text or "No title available"
+    # Assuming you'll expand to extract other data like date, text
+    new_row = {"headline": title, "alltext": "", "date": "", "source": "CNBC", "url": url}
+    new_rows_df = new_rows_df.append(new_row, ignore_index=True)
+
+print(new_rows_df.head())
+
 
 
 
