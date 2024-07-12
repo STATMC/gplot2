@@ -487,7 +487,56 @@ ConnectionError: (MaxRetryError("HTTPSConnectionPool(host='huggingface.co', port
 
 
 
+import datetime 
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import pymongo
+import warnings
+from dateutil.parser import parse
+import datetime as dt
+from lxml import etree
 
+warnings.filterwarnings("ignore")
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client["news"]
+newsCollection = db["news_collection"]
+
+proxies = {
+    "https" : "fnyproxy.fnylocal.com:8080",
+    "http" : "fnyproxy.fnylocal.com:8080"
+}
+
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'}
+
+
+URL = "https://www.cnbc.com/site-map/articles/yesterday/"
+
+
+#response = requests.get(URL, proxies = proxies, verify = False)
+
+res = requests.get(URL, proxies = proxies,headers=headers, verify = False)
+soup = BeautifulSoup(res.text, "html.parser")
+
+
+dom = etree.HTML(str(soup))
+
+# print(dom)
+
+print(soup.prettify())
+
+
+links_element = dom.xpath('//div/div[contains(@class, "SiteMapArticleList-articleData")]/ul/li/a[contains(@class, "EditionMenu-featuredSubLink EditionMenu-subMenuLink)]"')
+
+for li in links_element:
+    print(li)
+
+
+new_rows_df = pd.DataFrame(columns = ["headline", "alltext", "date", "source", "url"])
+
+
+print(links_element)
 
 
 
