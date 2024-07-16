@@ -1,0 +1,43 @@
+import datetime 
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import pymongo
+import warnings
+from dateutil.parser import parse
+import datetime as dt
+from lxml import etree
+
+
+
+warnings.filterwarnings("ignore")
+client = pymongo.MongoClient('127.0.0.1', 27017)
+db = client["news"]
+newsCollection = db["news_collection"]
+
+proxies = {
+    "https" : "fnyproxy.fnylocal.com:8080",
+    "http" : "fnyproxy.fnylocal.com:8080"
+}
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'}
+
+
+
+
+url = "https://tradingeconomics.com/calendar"
+
+
+res = requests.get(url, proxies = proxies,headers=headers, verify = False)
+soup = BeautifulSoup(res.text, "html.parser")
+
+
+
+# print(soup.prettify())
+
+dom = etree.HTML(str(soup))
+
+
+row_elements = dom.xpath('//div[contains(@class, "table-responsive")]/table/tbody/tr')
+
+print((row_elements))
