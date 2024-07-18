@@ -1,0 +1,19 @@
+df['date'] = None
+
+# 'time' sütunundaki son AM veya PM değiştiğinde, dates listesinden yeni bir tarih alınacak
+current_date_index = 0
+current_am_pm = None
+
+for i in range(len(df)):
+    time_value = df.loc[i, 'time']
+    if 'AM' in time_value or 'PM' in time_value:
+        am_pm = 'AM' if 'AM' in time_value else 'PM'
+        if current_am_pm is None:
+            current_am_pm = am_pm  # İlk değeri atama
+        elif current_am_pm != am_pm:
+            current_am_pm = am_pm
+            current_date_index += 1  # Yeni tarih bilgisine geçiş
+        
+    df.loc[i, 'date'] = dates[current_date_index]
+
+print(df)
